@@ -369,6 +369,95 @@ class TencentExmailSdk {
         return res.body.list;
       });
   }
+
+  /**
+   *
+   * @param {Object} form
+   * @param form.groupid
+   * @param form.groupname
+   * @param form.allow_type
+   * @param [form.userlist]
+   * @param [form.grouplist]
+   * @param [form.department]
+   * @param [form.allow_userlist]
+   * @returns {Promise.<String>}
+   */
+  createGroup(form) {
+    return request.post('/cgi-bin/group/create', {
+      form,
+      qs: {
+        access_token: this.accessToken,
+      },
+    })
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body.errmsg;
+      });
+  }
+
+  /**
+   *
+   * @param {Object} form
+   * @param form.groupid
+   * @param [form.groupname]
+   * @param [form.allow_type]
+   * @param [form.userlist]
+   * @param [form.grouplist]
+   * @param [form.department]
+   * @param [form.allow_userlist]
+   * @returns {Promise.<String>}
+   */
+  updateGroup(form) {
+    return request.post('/cgi-bin/group/update', {
+      form,
+      qs: {
+        access_token: this.accessToken,
+      },
+    })
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body.errmsg;
+      });
+  }
+
+  deleteGroup(groupid) {
+    return request.get('/cgi-bin/group/delete', {
+      qs: {
+        access_token: this.accessToken,
+        groupid,
+      },
+    })
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body.errmsg;
+      });
+  }
+
+  /**
+   *
+   * @param groupid
+   * @returns {Promise.<Object>}
+   */
+  getGroup(groupid) {
+    return request.get('/cgi-bin/group/get', {
+      qs: {
+        access_token: this.accessToken,
+        groupid,
+      },
+    })
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body;
+      });
+  }
 }
 
 
