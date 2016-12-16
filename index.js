@@ -1,9 +1,6 @@
 /**
  * Created by bangbang93 on 2016/12/16.
  */
-'use strict';
-const co = require('co');
-const querystring = require('querystring');
 
 const BASE_URL = 'https://api.exmail.qq.com';
 
@@ -12,116 +9,112 @@ const request = require('co-request').defaults({
   json: true,
 });
 
+/**
+ *
+ * @param body
+ * @returns {Error}
+ */
+function makeError(body) {
+  const err = new Error(body.errmsg);
+  err.errcode = body.errcode;
+  return err;
+}
+
 class TencentExmailSdk {
   /**
    *
    * @param corpId
    * @param corpSecret
    */
-  constructor({corpId, corpSecret}){
-    this._corpId = corpId;
-    this._corpSecret = corpSecret;
+  constructor({ corpId, corpSecret }) {
+    this.corpId = corpId;
+    this.corpSecret = corpSecret;
     this.init();
   }
 
-  init(){
+  init() {
     return request.get('/cgi-bin/gettoken', {
       qs: {
-        corpid: this._corpId,
-        corpsecret: this._corpSecret,
-      }
+        corpid: this.corpId,
+        corpsecret: this.corpSecret,
+      },
     })
-      .then((res)=>{
-        let body = res.body;
-        if (body['errcode']){
-          let err = new Error(body['errmsg']);
-          err.errcode = body.errcode;
-          throw err;
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
         }
-        this._accessToken = body['access_token'];
-        this._expireIn = body['expire_in'];
-        this._loginTime = new Date();
-        this._expire = this._loginTime.valueOf() / 1000 + this._expireIn;
-        setInterval(this.init.bind(this), this._expireIn - 60);
-        return body;
-      })
+        this.accessToken = res.body.access_token;
+        this.expireIn = res.body.expire_in;
+        this.loginTime = new Date();
+        this.expire = (this.loginTime.valueOf() / 1000) + this.expireIn;
+        setInterval(this.init.bind(this), this.expireIn - 60);
+        return res.body;
+      });
   }
 
   /**
    *
-   * @param name
-   * @param parentid
-   * @param order
+   * @param form.name
+   * @param form.parentid
+   * @param [form.order]
    * @returns {Promise.<Number>} 新建的部门id
    */
-  createDepartment(name, parentid, order){
+  createDepartment(form) {
     return request.post('/cgi-bin/department/create', {
-      form: {
-        name,
-        parentid,
-        order
-      },
+      form,
       qs: {
-        access_token: this._accessToken
-      }
+        access_token: this.accessToken,
+      },
     })
-      .then((res)=>{
-        let body = res.body;
-        if (body.errcode == 0){
-          return body.id;
-        } else {
-          throw makeError(body);
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
         }
-      })
+        return res.body.id;
+      });
   }
 
   /**
    *
-   * @param id
-   * @param name
-   * @param partentid
-   * @param order
-   * @returns {Promise}
+   * @param form.id
+   * @param form.name
+   * @param form.partentid
+   * @param [form.order]
+   * @returns {Promise.<String>}
    */
-  updateDepartment(id, {name, partentid, order}){
+  updateDepartment(form) {
     return request.post('/cgi-bin/department/update', {
-      form: {
-        id, name, partentid, order
-      },
+      form,
       qs: {
-        access_token: this._accessToken
-      }
+        access_token: this.accessToken,
+      },
     })
-      .then((res)=>{
-        let body = res.body;
-        if (body.errcode == 0){
-          return true;
-        } else {
-          throw makeError(body);
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
         }
-      })
+        return res.body.errmsg;
+      });
   }
 
   /**
    *
    * @param id
-   * @returns {Promise}
+   * @returns {Promise.<String>}
    */
-  deleteDepartment(id){
+  deleteDepartment(id) {
     return request.get('/cgi-bin/department/delete', {
       qs: {
-        access_token: this._accessToken,
-        id
-      }
+        access_token: this.accessToken,
+        id,
+      },
     })
-      .then((res)=>{
-        let body = res.body;
-        if (body.errcode == 0){
-          return true;
-        } else {
-          throw makeError(body);
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
         }
-      })
+        return res.body.errmsg;
+      });
   }
 
   /**
@@ -140,27 +133,25 @@ class TencentExmailSdk {
            "order": 40
        }]
    */
-  listDepartment(id){
+  listDepartment(id) {
     return request.get('/cgi-bin/department/list', {
       qs: {
-        access_token: this._accessToken,
-        id
-      }
+        access_token: this.accessToken,
+        id,
+      },
     })
-      .then((res)=>{
-        let body = res.body;
-        if (body.errcode == 0){
-          return body['department'];
-        } else {
-          throw makeError(body);
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
         }
-      })
+        return res.body.department;
+      });
   }
 
   /**
    *
-   * @param name
-   * @param fuzzy
+   * @param form.name
+   * @param form.fuzzy
    * @returns {Promise.<Array.<Object>>}
    * [{
            "id": 2,
@@ -174,37 +165,155 @@ class TencentExmailSdk {
            "order": 40
        }]
    */
-  searchDepartment(name, fuzzy){
+  searchDepartment(form) {
     return request.post('/cgi-bin/department/search', {
-      form: {
-        name,
-        fuzzy,
-      },
+      form,
       qs: {
-        access_token: this._accessToken
-      }
+        access_token: this.accessToken,
+      },
     })
-      .then((res)=>{
-        let body = res.body;
-        if (body.errcode == 0){
-          return body['department'];
-        } else {
-          throw makeError(body);
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
         }
-      })
+        return res.body.department;
+      });
   }
 
+  /**
+   *
+   * @param {Object} form
+   * @param form.userid
+   * @param form.name
+   * @param form.department
+   * @param [form.position]
+   * @param [form.mobile]
+   * @param [form.tel]
+   * @param [form.extid]
+   * @param [form.gender]
+   * @param [form.slaves]
+   * @param [form.password]
+   * @param [form.cpwd_login]
+   * @returns {Promise.<String>}
+   */
+  createUser(form) {
+    return request.post('/cgi-bin/user/create', {
+      form,
+      qs: {
+        access_token: this.accessToken,
+      },
+    })
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body.errmsg;
+      });
+  }
 
+  /**
+   *
+   * @param {Object} form
+   * @param form.userid
+   * @param [form.name]
+   * @param [form.department]
+   * @param [form.position]
+   * @param [form.mobile]
+   * @param [form.tel]
+   * @param [form.extid]
+   * @param [form.gender]
+   * @param [form.slaves]
+   * @param [form.password]
+   * @param [form.cpwd_login]
+   * @returns {Promise.<String>}
+   */
+  updateUser(form) {
+    return request.post('/cgi-bin/user/update', {
+      form,
+      qs: {
+        access_token: this.accessToken,
+      },
+    })
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body.errmsg;
+      });
+  }
 
+  /**
+   *
+   * @param userid
+   * @returns {Promise.<String>}
+   */
+  deleteUser(userid) {
+    return request.get('/cgi-bin/user/delete', {
+      qs: {
+        access_token: this.accessToken,
+        userid,
+      },
+    })
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body.errmsg;
+      });
+  }
+
+  /**
+   *
+   * @param userid
+   * @returns {Promise.<String>}
+   */
+  getUser(userid) {
+    return request.get('/cgi-bin/user/get', {
+      qs: {
+        access_token: this.accessToken,
+        userid,
+      },
+    })
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body.errmsg;
+      });
+  }
+
+  /**
+   *
+   * @param departmentId
+   * @param fetchChild
+   * @returns {Promise.<Array<Object>>}
+   * [{
+    "userid": "zhangsan@gzdev.com",
+    "name": "李四",
+    "t": [1, 2]
+    }]
+   */
+  getDepartmentUser(departmentId, fetchChild) {
+    return request.get('/cgi-bin/user/simplelist', {
+      qs: {
+        access_token: this.accessToken,
+        department_id: departmentId,
+        fetch_child: fetchChild,
+      },
+    })
+      .then((res)=>{
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body.userlist;
+      });
+  }
+
+  getDepartmentUserDetail(departmentid, fetchChild) {
+
+  }
 }
 
-/**
- *
- * @param body
- * @returns {Error}
- */
-function makeError(body){
-  let err = new Error(body.errmsg);
-  err.errcode = body.errcode;
-  return err;
-}
+
+
+module.exports = TencentExmailSdk;
