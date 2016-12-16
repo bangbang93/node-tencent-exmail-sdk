@@ -1,6 +1,6 @@
 {
   "name": "node-tencent-exmail-sdk",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "tenncent exmail sdk",
   "main": "index.js",
   "scripts": {
