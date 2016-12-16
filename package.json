@@ -1,0 +1,23 @@
+{
+  "name": "node-tencent-exmail-sdk",
+  "version": "1.0.0",
+  "description": "tenncent exmail sdk",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bangbang93/node-tencent-exmail-sdk.git"
+  },
+  "keywords": [
+    "exmail",
+    "tencent"
+  ],
+  "author": "bangbang93",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/bangbang93/node-tencent-exmail-sdk/issues"
+  },
+  "homepage": "https://github.com/bangbang93/node-tencent-exmail-sdk#readme"
+}
