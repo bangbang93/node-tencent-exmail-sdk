@@ -3,22 +3,12 @@
  */
 
 const BASE_URL = 'https://api.exmail.qq.com';
+const makeError = require('./util').makeError;
 
 const request = require('co-request').defaults({
   baseUrl: BASE_URL,
   json: true,
 });
-
-/**
- *
- * @param body
- * @returns {Error}
- */
-function makeError(body) {
-  const err = new Error(body.errmsg);
-  err.errcode = body.errcode;
-  return err;
-}
 
 class TencentExmailSdk {
   /**
@@ -30,6 +20,8 @@ class TencentExmailSdk {
     this.corpId = corpId;
     this.corpSecret = corpSecret;
     this.init();
+    this.request = request;
+    this.department = new (require('./department'))(this);
   }
 
   init() {
@@ -49,134 +41,6 @@ class TencentExmailSdk {
         this.expire = (this.loginTime.valueOf() / 1000) + this.expireIn;
         setInterval(this.init.bind(this), this.expireIn - 60);
         return res.body;
-      });
-  }
-
-  /**
-   *
-   * @param form.name
-   * @param form.parentid
-   * @param [form.order]
-   * @returns {Promise.<Number>} 新建的部门id
-   */
-  createDepartment(form) {
-    return request.post('/cgi-bin/department/create', {
-      form,
-      qs: {
-        access_token: this.accessToken,
-      },
-    })
-      .then((res) => {
-        if (res.body.errcode) {
-          throw makeError(res.body);
-        }
-        return res.body.id;
-      });
-  }
-
-  /**
-   *
-   * @param form.id
-   * @param form.name
-   * @param form.partentid
-   * @param [form.order]
-   * @returns {Promise.<String>}
-   */
-  updateDepartment(form) {
-    return request.post('/cgi-bin/department/update', {
-      form,
-      qs: {
-        access_token: this.accessToken,
-      },
-    })
-      .then((res) => {
-        if (res.body.errcode) {
-          throw makeError(res.body);
-        }
-        return res.body.errmsg;
-      });
-  }
-
-  /**
-   *
-   * @param id
-   * @returns {Promise.<String>}
-   */
-  deleteDepartment(id) {
-    return request.get('/cgi-bin/department/delete', {
-      qs: {
-        access_token: this.accessToken,
-        id,
-      },
-    })
-      .then((res) => {
-        if (res.body.errcode) {
-          throw makeError(res.body);
-        }
-        return res.body.errmsg;
-      });
-  }
-
-  /**
-   *
-   * @param id
-   * @returns {Promise.<Array.<Object>>}
-   * [{
-           "id": 2,
-           "name": "广州研发中心",
-           "parentid": 1,
-           "order": 10
-       },{
-           "id": 3
-           "name": "邮箱产品部",
-           "parentid": 2,
-           "order": 40
-       }]
-   */
-  listDepartment(id) {
-    return request.get('/cgi-bin/department/list', {
-      qs: {
-        access_token: this.accessToken,
-        id,
-      },
-    })
-      .then((res) => {
-        if (res.body.errcode) {
-          throw makeError(res.body);
-        }
-        return res.body.department;
-      });
-  }
-
-  /**
-   *
-   * @param form.name
-   * @param form.fuzzy
-   * @returns {Promise.<Array.<Object>>}
-   * [{
-           "id": 2,
-           "name": "广州研发中心",
-           "parentid": 1,
-           "order": 10
-       },{
-           "id": 3
-           "name": "邮箱产品部",
-           "parentid": 2,
-           "order": 40
-       }]
-   */
-  searchDepartment(form) {
-    return request.post('/cgi-bin/department/search', {
-      form,
-      qs: {
-        access_token: this.accessToken,
-      },
-    })
-      .then((res) => {
-        if (res.body.errcode) {
-          throw makeError(res.body);
-        }
-        return res.body.department;
       });
   }
 
