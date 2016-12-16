@@ -3,13 +3,9 @@
  */
 'use strict';
 const makeError = require('./util').makeError;
+const Api = require('./api');
 
-class Department {
-
-  constructor(sdk){
-    this.request = sdk.request;
-    this.sdk = sdk;
-  }
+class Department extends Api{
 
   /**
    *
