@@ -301,7 +301,7 @@ class TencentExmailSdk {
         fetch_child: fetchChild,
       },
     })
-      .then((res)=>{
+      .then((res) => {
         if (res.body.errcode) {
           throw makeError(res.body);
         }
@@ -309,11 +309,67 @@ class TencentExmailSdk {
       });
   }
 
-  getDepartmentUserDetail(departmentid, fetchChild) {
+  /**
+   *
+   * @param departmentId
+   * @param fetchChild
+   * @returns {Promise.<Array>}
+   * [{
+    "userid": "zhangsan@gzdev.com",
+    "name": "李四",
+    "department": [1, 2],
+    "position": "后台工程师",
+    "tel": "60000",
+    "mobile": "15913215421",
+    "extid": "123456789",
+    "gender": "1",
+    "enable": "1",
+    "slaves": ["zhangsan@gz.com", "zhangsan@bjdev.com"],
+    "cpwd_login": 0
+  }]
+   */
+  getDepartmentUserDetail(departmentId, fetchChild) {
+    return request.get('/cgi-bin/user/list', {
+      qs: {
+        access_token: this.accessToken,
+        department_id: departmentId,
+        fetch_child: fetchChild,
+      },
+    })
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body.userlist;
+      });
+  }
 
+  /**
+   *
+   * @param userList
+   * @returns {Promise.<Array>}
+   * [
+   {"user":"zhangsan@bjdev.com", "type":1},
+   {"user":"zhangsangroup@shdev.com", "type":3}
+   ]
+   */
+  checkUser(userList) {
+    return request.post('/cgi-bin/user/batchcheck', {
+      form: {
+        userlist: userList,
+      },
+      qs: {
+        access_token: this.accessToken,
+      },
+    })
+      .then((res) => {
+        if (res.body.errcode) {
+          throw makeError(res.body);
+        }
+        return res.body.list;
+      });
   }
 }
-
 
 
 module.exports = TencentExmailSdk;
