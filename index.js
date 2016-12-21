@@ -24,6 +24,7 @@ class TencentExmailSdk {
     this.department = new (require('./department'))(this);
     this.user = new (require('./user')(this));
     this.group = new (require('./group')(this));
+    this.option = new (require('./option')(this));
   }
 
   init() {
