@@ -22,7 +22,8 @@
   "homepage": "https://github.com/bangbang93/node-tencent-exmail-sdk#readme",
   "dependencies": {
     "co": "^4.6.0",
-    "co-request": "^1.0.0"
+    "co-request": "^1.0.0",
+    "moment": "^2.17.1"
   },
   "devDependencies": {
     "eslint": "^3.12.2",
