@@ -10,7 +10,10 @@ const sdk = new SDK({
 require('should');
 
 before('init', function () {
-  return sdk.init();
+  return sdk.init()
+    .then(()=>{
+      console.log(sdk.accessToken);
+    })
 });
 
 require('./department')(sdk);

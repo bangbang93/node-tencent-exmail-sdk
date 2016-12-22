@@ -12,7 +12,9 @@ class Department extends Api{
    * @param body.name
    * @param body.parentid
    * @param [body.order]
-   * @returns {Promise.<Number>} 新建的部门id
+   * @returns {Promise.<Number>} 新建的部门id,跑单测时发现，接口返回的id不是部门id
+   * 返回是5196969938080910000，实际上list得到的部门id是5196969938080910636
+   * 应该是疼迅API返回忘了加某个自增id值
    */
   create(body) {
     return this.request.post('/cgi-bin/department/create', {
@@ -45,6 +47,7 @@ class Department extends Api{
       },
     })
       .then((res) => {
+        console.log(res.body);
         if (res.body.errcode) {
           throw makeError(res.body);
         }

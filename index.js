@@ -46,7 +46,7 @@ class TencentExmailSdk {
         this.expireIn = res.body.expire_in;
         this.loginTime = new Date();
         this.expire = (this.loginTime.valueOf() / 1000) + this.expireIn;
-        setInterval(this.init.bind(this), this.expireIn - 60);
+        // setInterval(this.init.bind(this), this.expireIn - 60);
         return res.body;
       });
   }
