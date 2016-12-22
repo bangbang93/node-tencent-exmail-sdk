@@ -21,7 +21,7 @@ class Log extends Api {
       qs: {
         access_token: this.sdk.accessToken,
       },
-      form: {
+      body: {
         domain,
         begin_date: moment(beginDate).format('yyyy-mm-dd'),
         end_date: moment(endDate).format('yyyy-mm-dd'),
@@ -52,7 +52,7 @@ class Log extends Api {
       qs: {
         access_token: this.sdk.accessToken,
       },
-      form: {
+      body: {
         begin_date: moment(beginDate).format('yyyy-mm-dd'),
         end_date: moment(endDate).format('yyyy-mm-dd'),
         mailtype: mailType,
@@ -81,7 +81,7 @@ class Log extends Api {
       qs: {
         access_token: this.sdk.accessToken,
       },
-      form: {
+      body: {
         userid: userId,
         begin_date: moment(beginDate).format('yyyy-mm-dd'),
         end_date: moment(endDate).format('yyyy-mm-dd'),
@@ -106,7 +106,7 @@ class Log extends Api {
       qs: {
         access_token: this.sdk.accessToken,
       },
-      form: {
+      body: {
         begin_date: moment(beginDate).format('yyyy-mm-dd'),
         end_date: moment(endDate).format('yyyy-mm-dd'),
       }
@@ -131,7 +131,7 @@ class Log extends Api {
       qs: {
         access_token: this.sdk.accessToken,
       },
-      form: {
+      body: {
         type,
         begin_date: moment(beginDate).format('yyyy-mm-dd'),
         end_date: moment(endDate).format('yyyy-mm-dd'),
@@ -147,3 +147,5 @@ class Log extends Api {
 
 
 }
+
+module.exports = Log;

@@ -10,7 +10,7 @@
  * @returns {Error}
  */
 exports.makeError = function makeError(body) {
-  const err = new Error(body.errmsg);
+  const err = new Error(`${body.errcode}: ${body.errmsg}`);
   err.errcode = body.errcode;
   return err;
 };

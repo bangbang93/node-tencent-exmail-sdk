@@ -17,15 +17,17 @@ class TencentExmailSdk {
    * @param corpSecret
    */
   constructor({ corpId, corpSecret }) {
+    if (!corpId || !corpSecret){
+      throw new Error('corpId and corpSecret can not be null');
+    }
     this.corpId = corpId;
     this.corpSecret = corpSecret;
-    this.init();
     this.request = request;
     this.department = new (require('./department'))(this);
-    this.user = new (require('./user')(this));
-    this.group = new (require('./group')(this));
-    this.option = new (require('./option')(this));
-    this.log = new (require('./log')(this));
+    this.user = new (require('./user'))(this);
+    this.group = new (require('./group'))(this);
+    this.option = new (require('./option'))(this);
+    this.log = new (require('./log'))(this);
 
   }
 

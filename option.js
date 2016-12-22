@@ -19,7 +19,7 @@ class Option extends Api {
       qs: {
         access_token: this.sdk.accessToken,
       },
-      form: {
+      body: {
         userid: userId,
         type,
       }
@@ -43,7 +43,7 @@ class Option extends Api {
       qs: {
         access_token: this.sdk.accessToken,
       },
-      form: {
+      body: {
         userid: userId,
         option,
       }
@@ -56,3 +56,5 @@ class Option extends Api {
       });
   }
 }
+
+module.exports = Option;

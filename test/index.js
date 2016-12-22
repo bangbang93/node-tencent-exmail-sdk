@@ -4,9 +4,13 @@
 'use strict';
 const SDK = require('../');
 const sdk = new SDK({
-  corpSecret: 'a',
-  corpId: 'b'
+  corpSecret: process.env.secret,
+  corpId: process.env.id,
+});
+require('should');
+
+before('init', function () {
+  return sdk.init();
 });
 
-sdk.department.create();
-sdk.department.update();
+require('./department')(sdk);

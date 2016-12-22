@@ -9,14 +9,14 @@ class Department extends Api{
 
   /**
    *
-   * @param form.name
-   * @param form.parentid
-   * @param [form.order]
+   * @param body.name
+   * @param body.parentid
+   * @param [body.order]
    * @returns {Promise.<Number>} 新建的部门id
    */
-  create(form) {
+  create(body) {
     return this.request.post('/cgi-bin/department/create', {
-      form,
+      body,
       qs: {
         access_token: this.sdk.accessToken,
       },
@@ -31,15 +31,15 @@ class Department extends Api{
 
   /**
    *
-   * @param form.id
-   * @param form.name
-   * @param form.partentid
-   * @param [form.order]
-   * @returns {Promise.<String>}
+   * @param body.id
+   * @param body.name
+   * @param body.partentid
+   * @param [body.order]
+   * @returns {Promise.<String>} updated
    */
-  update(form) {
+  update(body) {
     return this.request.post('/cgi-bin/department/update', {
-      form,
+      body,
       qs: {
         access_token: this.sdk.accessToken,
       },
@@ -105,8 +105,8 @@ class Department extends Api{
 
   /**
    *
-   * @param form.name
-   * @param form.fuzzy
+   * @param [body.name]
+   * @param [body.fuzzy]
    * @returns {Promise.<Array.<Object>>}
    * [{
            "id": 2,
@@ -120,9 +120,9 @@ class Department extends Api{
            "order": 40
        }]
    */
-  search(form) {
+  search(body) {
     return this.request.post('/cgi-bin/department/search', {
-      form,
+      body,
       qs: {
         access_token: this.sdk.accessToken,
       },

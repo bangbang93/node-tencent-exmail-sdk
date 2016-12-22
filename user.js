@@ -8,23 +8,23 @@ const Api = require('./api');
 class User extends Api{
   /**
    *
-   * @param {Object} form
-   * @param form.userid
-   * @param form.name
-   * @param form.department
-   * @param [form.position]
-   * @param [form.mobile]
-   * @param [form.tel]
-   * @param [form.extid]
-   * @param [form.gender]
-   * @param [form.slaves]
-   * @param [form.password]
-   * @param [form.cpwd_login]
+   * @param {Object} body
+   * @param body.userid
+   * @param body.name
+   * @param body.department
+   * @param [body.position]
+   * @param [body.mobile]
+   * @param [body.tel]
+   * @param [body.extid]
+   * @param [body.gender]
+   * @param [body.slaves]
+   * @param [body.password]
+   * @param [body.cpwd_login]
    * @returns {Promise.<String>}
    */
-  create(form) {
+  create(body) {
     return this.request.post('/cgi-bin/user/create', {
-      form,
+      body,
       qs: {
         access_token: this.sdk.accessToken,
       },
@@ -39,23 +39,23 @@ class User extends Api{
 
   /**
    *
-   * @param {Object} form
-   * @param form.userid
-   * @param [form.name]
-   * @param [form.department]
-   * @param [form.position]
-   * @param [form.mobile]
-   * @param [form.tel]
-   * @param [form.extid]
-   * @param [form.gender]
-   * @param [form.slaves]
-   * @param [form.password]
-   * @param [form.cpwd_login]
+   * @param {Object} body
+   * @param body.userid
+   * @param [body.name]
+   * @param [body.department]
+   * @param [body.position]
+   * @param [body.mobile]
+   * @param [body.tel]
+   * @param [body.extid]
+   * @param [body.gender]
+   * @param [body.slaves]
+   * @param [body.password]
+   * @param [body.cpwd_login]
    * @returns {Promise.<String>}
    */
-  update(form) {
+  update(body) {
     return this.request.post('/cgi-bin/user/update', {
-      form,
+      body,
       qs: {
         access_token: this.sdk.accessToken,
       },
@@ -181,7 +181,7 @@ class User extends Api{
    */
   check(userList) {
     return this.request.post('/cgi-bin/user/batchcheck', {
-      form: {
+      body: {
         userlist: userList,
       },
       qs: {

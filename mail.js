@@ -19,7 +19,7 @@ class Mail extends Api {
       qs: {
         access_token: this.sdk.accessToken,
       },
-      form: {
+      body: {
         userid: userId,
         begin_date: beginDate,
         end_date: endDate,

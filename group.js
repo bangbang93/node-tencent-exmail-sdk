@@ -8,19 +8,19 @@ const Api = require('./api');
 class Group extends Api {
   /**
    *
-   * @param {Object} form
-   * @param form.groupid
-   * @param form.groupname
-   * @param form.allow_type
-   * @param [form.userlist]
-   * @param [form.grouplist]
-   * @param [form.department]
-   * @param [form.allow_userlist]
+   * @param {Object} body
+   * @param body.groupid
+   * @param body.groupname
+   * @param body.allow_type
+   * @param [body.userlist]
+   * @param [body.grouplist]
+   * @param [body.department]
+   * @param [body.allow_userlist]
    * @returns {Promise.<String>}
    */
-  create(form) {
+  create(body) {
     return this.request.post('/cgi-bin/group/create', {
-      form,
+      body,
       qs: {
         access_token: this.sdk.accessToken,
       },
@@ -35,19 +35,19 @@ class Group extends Api {
 
   /**
    *
-   * @param {Object} form
-   * @param form.groupid
-   * @param [form.groupname]
-   * @param [form.allow_type]
-   * @param [form.userlist]
-   * @param [form.grouplist]
-   * @param [form.department]
-   * @param [form.allow_userlist]
+   * @param {Object} body
+   * @param body.groupid
+   * @param [body.groupname]
+   * @param [body.allow_type]
+   * @param [body.userlist]
+   * @param [body.grouplist]
+   * @param [body.department]
+   * @param [body.allow_userlist]
    * @returns {Promise.<String>}
    */
-  update(form) {
+  update(body) {
     return this.request.post('/cgi-bin/group/update', {
-      form,
+      body,
       qs: {
         access_token: this.sdk.accessToken,
       },
